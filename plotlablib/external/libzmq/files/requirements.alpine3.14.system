@@ -1,0 +1,8 @@
+cmake
+build-base
+libtool
+autoconf
+automake
+pkgconfig
+unzip 
+krb5-libs 

@@ -15,35 +15,58 @@ cmake_minimum_required(VERSION 3.13)
 
 project(plotlablib VERSION 0.0.1
              DESCRIPTION "Plotting library as part of the CSA framework"
-             HOMEPAGE_URL "https://github.com/DLR-TS/plotlablib"
+             HOMEPAGE_URL "https://github.com/eclipse/adore/tree/master/plotlab/lib"
 )
 
 set(PACKAGE_VENDOR "DLR TS-KOS-SAI")
-set(PACKAGE_DESCRIPTION "plotlablib")
+set(PACKAGE_DESCRIPTION "plotlab")
 set(PACKAGE_MAINTAINER "DLR TS-KOS-SAI")
 set(PACKAGE_MAINTAINER_EMAIL "ts-kos-sai@dlr.de")
 
-# catkin_add_nosetests(test)
-
 include(GNUInstallDirs)
+#list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/external/libzmq/build/install/share/cmake/ZeroMQ")
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/external/libzmq/build/install")
+#list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/external/cppzmq/cppzmq/build/install/usr/local/share/cmake/cppzmq")
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/external/cppzmq/cppzmq/build/install")
+message("CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
+
+find_package(ZeroMQ CONFIG REQUIRED)
+find_package(cppzmq CONFIG REQUIRED)
+
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(Packing)
 
-set(CMAKE_MODULE_PATH
-#    ${CMAKE_CURRENT_SOURCE_DIR}/../cmake
-#    ${CMAKE_CURRENT_SOURCE_DIR}/../external
-    CACHE INTERNAL "" FORCE
-)
-          
-include_directories(
- include/${PROJECT_NAME}
-)
+
+set_directory_properties(PROPERTIES EXCLUDE_FROM_ALL YES)
+
+#include(external/zmq.cmake)
+#include_directories(external/cppzmq)
 
 add_library(${PROJECT_NAME} INTERFACE)
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-target_include_directories(${PROJECT_NAME} INTERFACE include/${PROJECT_NAME}) 
-message("${INTERFACE_INCLUDE_DIRECTORIES}")
 
+get_directory_property(PLOTLABLIB_PARENT_DIR PARENT_DIRECTORY)
+
+message(STATUS " plotlab: building plotlab lib...")
+
+
+#set(zmqlib_include  ${CMAKE_CURRENT_SOURCE_DIR}/external/cppzmq/
+#  ${CMAKE_CURRENT_SOURCE_DIR}/external/libzmq/build/bin/usr/local/include
+#)
+
+target_include_directories(
+  ${PROJECT_NAME}
+  INTERFACE 
+    $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+
+#target_link_libraries(plotlablib INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/external/libzmq/build/bin/usr/local/lib/libzmq.a)
+target_link_libraries(plotlablib INTERFACE libzmq-static cppzmq)
+
+target_compile_options(${PROJECT_NAME} INTERFACE "-Wall")
+
+target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 
 install(TARGETS ${PROJECT_NAME}
         EXPORT ${PROJECT_NAME}_Targets
@@ -73,4 +96,5 @@ install(FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
         COMPONENT ${PROJECT_NAME}
 )
 
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/build/devel/include DESTINATION .) 
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include DESTINATION .)
+

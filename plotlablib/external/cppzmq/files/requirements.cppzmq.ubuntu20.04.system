@@ -1,5 +1,5 @@
 make
 cmake
-gcc
 g++
-libzmq5
+gcc
+pkg-config

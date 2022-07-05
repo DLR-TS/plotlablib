@@ -1,0 +1,9 @@
+git
+build-essential
+libtool
+autoconf
+automake
+pkg-config
+unzip 
+libkrb5-dev 
+cmake
