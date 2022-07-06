@@ -17,6 +17,8 @@ RUN apt-get update && \
 COPY . /tmp/${PROJECT}
 COPY --from=libzmq /tmp/libzmq /tmp/libzmq
 COPY --from=cppzmq /tmp/cppzmq /tmp/cppzmq
+RUN ln -s /tmp/${PROJECT}/${PROJECT}/external/libzmq/libzmq /tmp/libzmq
+RUN ln -s /tmp/${PROJECT}/${PROJECT}/external/cppzmq/cppzmq /tmp/cppzmq
 
 WORKDIR /tmp/libzmq/build
 RUN cmake --install .
