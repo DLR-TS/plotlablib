@@ -3,7 +3,3 @@ gcc
 g++
 cmake
 asciidoc
-libzmq3-dev 
-libzmq5 
-libzmqpp-dev
-libzmqpp4
