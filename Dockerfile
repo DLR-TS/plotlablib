@@ -15,10 +15,16 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY . /tmp/${PROJECT}
+
 COPY --from=libzmq /tmp/libzmq /tmp/libzmq
+RUN mkdir -p /tmp/${PROJECT}/${PROJECT}/external/libzmq
+WORKDIR /tmp/${PROJECT}/${PROJECT}/external/libzmq
+RUN ln -s ../../../../libzmq libzmq
+
 COPY --from=cppzmq /tmp/cppzmq /tmp/cppzmq
-RUN ln -s /tmp/${PROJECT}/${PROJECT}/external/libzmq/libzmq /tmp/libzmq
-RUN ln -s /tmp/${PROJECT}/${PROJECT}/external/cppzmq/cppzmq /tmp/cppzmq
+RUN mkdir -p /tmp/${PROJECT}/${PROJECT}/external/cppzmq
+WORKDIR /tmp/${PROJECT}/${PROJECT}/external/cppzmq
+RUN ln -s ../../../../cppzmq cppzmq
 
 WORKDIR /tmp/libzmq/build
 RUN cmake --install .
@@ -30,7 +36,7 @@ FROM plotlablib_requirements_base AS plotlablib_builder
 
 WORKDIR /tmp/${PROJECT}/${PROJECT}
 RUN rm -rf build && \
-    bash build.sh 
+    bash build.sh
 
 
 #FROM alpine:3.14 AS plotlablib_package
