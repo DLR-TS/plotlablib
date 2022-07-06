@@ -1,0 +1,6 @@
+**.git
+plotlablib/external/libzmq/libzmq/build
+**/external
+**/build
+**.log
+**.dockerignore

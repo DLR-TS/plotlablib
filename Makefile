@@ -1,78 +1,62 @@
+
 SHELL:=/bin/bash
 
+.DEFAULT_GOAL := all
+
 ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+
 MAKEFLAGS += --no-print-directory
 
 .EXPORT_ALL_VARIABLES:
 DOCKER_BUILDKIT?=1
 DOCKER_CONFIG?=
 
-.DEFAULT_GOAL := all
-
-LIBZMQ_IMAGE_NAME="libzmq:v4.3.2"
-PLOTLABLIB_IMAGE_NAME="plotlablib:latest"
-
-.PHONY: help 
+.PHONY: help  
 help:
 	@awk 'BEGIN {FS = ":.*##"; printf "Usage: make \033[36m<target>\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
+PLOTLABLIB_PROJECT="plotlablib"
+PLOTLABLIB_VERSION="latest"
+PLOTLABLIB_TAG="${PLOTLABLIB_PROJECT}:${PLOTLABLIB_VERSION}"
+
+.PHONY: set_env 
+set_env: 
+	$(eval PROJECT := ${PLOTLABLIB_PROJECT}) 
+	$(eval TAG := ${PLOTLABLIB_TAG})
+
 .PHONY: all 
-all: build_plotlablib
+all: build_external build
 
 .PHONY: build 
 build: all
 
-.PHONY: lint 
-lint:
-	cd cpplint && \
-        make lint CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/server) && \
-		make lint CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/lib/include)
-
-.PHONY: lintfix 
-lintfix:
-	cd cpplint && \
-        make lintfix CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/server) && \
-        make lintfix CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/lib/include)
-
-.PHONY: lintfix_simulate 
-lintfix_simulate:
-	cd cpplint && \
-        make lintfix_simulate CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/server) && \
-        make lintfix_simulate CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/lib/include)
-
-.PHONY: cppcheck 
-cppcheck:
-	cd cppcheck && \
-        make cppcheck CPP_PROJECT_DIRECTORY=$(realpath ${ROOT_DIR}/server)
+.PHONY: build
+build: set_env
+	rm -rf ${ROOT_DIR}/${PROJECT}/build
+	docker build --network host \
+                 --tag $(shell echo ${TAG} | tr A-Z a-z) \
+                 --build-arg PROJECT=${PROJECT} .
+	mkdir -p "${ROOT_DIR}/tmp/${PROJECT}/build"
+	docker cp $$(docker create --rm $(shell echo ${TAG} | tr A-Z a-z)):/tmp/${PROJECT}/${PROJECT}/build tmp/${PROJECT}/build
+	cp -r "${ROOT_DIR}/tmp/${PROJECT}/build/build" "${ROOT_DIR}/${PROJECT}"
+	rm -rf ${ROOT_DIR}/tmp
 
 .PHONY: clean 
-clean: clean_plotlab_lib clean_plotlab clean_platlab_server
+clean: set_env
+	rm -rf "${ROOT_DIR}/adore_if_ros_msg/build"
+	rm -rf "${ROOT_DIR}/tmp"
+	docker rm $$(docker ps -a -q --filter "ancestor=${TAG}") 2> /dev/null || true
+	docker rmi $$(docker images -q ${PROJECT}) 2> /dev/null || true
 
-.PHONY: build_plotlablib 
-build_plotlablib: clean_plotlab_lib 
-	cd plotlablib/external && make
-	docker build --network="host" -t "${PLOTLABLIB_IMAGE_NAME}" .
-	@mkdir -p "${ROOT_DIR}/tmp"
-	docker cp $$(docker create --rm ${PLOTLABLIB_IMAGE_NAME}):/tmp/plotlab tmp
-	@cp -r "${ROOT_DIR}/tmp/plotlab/plotlablib/build" "${ROOT_DIR}/plotlablib/"
-	@rm -rf "${ROOT_DIR}/tmp"
+.PHONY: build_external
+build_external:
+	cd plotlablib/external && \
+    make
 
-
-.PHONY: build_plotlab_lib 
-build_plotlab_lib:
-	cd "${ROOT_DIR}/lib" && bash build.sh 
-
-.PHONY: clean_plotlab_lib 
-clean_plotlab_lib:
-	rm -rf "${ROOT_DIR}/plotlablib/build"
-	cd plotlablib/external && make clean
-
-.PHONY: clean_plotlab 
-clean_plotlab:
-	rm -rf "${ROOT_DIR}/plotlablib/build"
-	docker rm $$(docker ps -a -q --filter "ancestor=${PLOTLABLIB_IMAGE_NAME}") 2> /dev/null || true
-	docker rmi $$(docker images -q ${PLOTLABLIB_IMAGE_NAME}) 2> /dev/null || true
-	docker rm $$(docker ps -a -q --filter "ancestor=${PLOTLABLIB_SERVER_IMAGE_NAME}") 2> /dev/null || true
+.PHONY: clean_external
+clean_external:
+	cd plotlablib/external && \
+    make clean
 
 .PHONY: docker_clean 
 docker_clean:

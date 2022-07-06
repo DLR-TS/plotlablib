@@ -13,9 +13,8 @@
 #********************************************************************************
 cmake_minimum_required(VERSION 3.13)
 
-project(plotlablib VERSION 0.0.1
-             DESCRIPTION "Plotting library as part of the CSA framework"
-             HOMEPAGE_URL "https://github.com/eclipse/adore/tree/master/plotlab/lib"
+project(plotlablib 
+        VERSION 0.0.1
 )
 
 set(PACKAGE_VENDOR "DLR TS-KOS-SAI")

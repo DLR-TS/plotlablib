@@ -2,9 +2,6 @@ make
 gcc
 g++
 cmake
-freeglut3-dev
-curl
-libcurl4-gnutls-dev
 asciidoc
 libzmq3-dev 
 libzmq5 
