@@ -17,8 +17,8 @@ project(plotlablib
         VERSION 0.0.1
 )
 
-#add_library(${PROJECT_NAME} INTERFACE)
-#add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+add_library(${PROJECT_NAME} INTERFACE)
+add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 set(PACKAGE_VENDOR "DLR TS-KOS-SAI")
 set(PACKAGE_DESCRIPTION "plotlab")
@@ -41,9 +41,6 @@ set_directory_properties(PROPERTIES EXCLUDE_FROM_ALL YES)
 
 #include(external/zmq.cmake)
 #include_directories(external/cppzmq)
-
-add_library(${PROJECT_NAME} INTERFACE)
-add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 get_directory_property(PLOTLABLIB_PARENT_DIR PARENT_DIRECTORY)
 
