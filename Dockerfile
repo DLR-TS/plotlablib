@@ -1,20 +1,17 @@
 ARG PROJECT
 
-
-FROM libzmq:latest AS libzmq
-FROM cppzmq:latest AS cppzmq
-
 FROM ubuntu:20.04 as plotlablib_requirements_base
 
 ARG PROJECT
 ARG REQUIREMENTS_FILE="requirements.${PROJECT}.ubuntu20.04.system"
 
-
 RUN mkdir -p /tmp/${PROJECT}/files
 COPY files/${REQUIREMENTS_FILE} /tmp/${PROJECT}/files
 WORKDIR /tmp/${PROJECT}/files
 
-RUN apt-get update && xargs apt-get install --no-install-recommends -y < ${REQUIREMENTS_FILE} && \
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y checkinstall && \
+    DEBIAN_FRONTEND=noninteractive xargs apt-get install --no-install-recommends -y < ${REQUIREMENTS_FILE} && \
     rm -rf /var/lib/apt/lists/*
 
 COPY . /tmp/${PROJECT}
