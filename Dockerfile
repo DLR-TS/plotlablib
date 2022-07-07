@@ -1,5 +1,8 @@
 ARG PROJECT
 
+FROM libzmq:latest AS libzmq
+FROM cppzmq:latest AS cppzmq
+
 FROM ubuntu:20.04 as plotlablib_requirements_base
 
 ARG PROJECT
@@ -27,16 +30,17 @@ WORKDIR /tmp/${PROJECT}/${PROJECT}/external/cppzmq
 RUN ln -s ../../../../cppzmq cppzmq
 
 WORKDIR /tmp/libzmq/build
-RUN cmake --install .
+RUN cmake --install . --prefix /tmp/${PROJECT}/${PROJECT}/build/install 
+#RUN cmake --install .
 
 WORKDIR /tmp/cppzmq/build
-RUN cmake --install .
+RUN cmake --install . --prefix /tmp/${PROJECT}/${PROJECT}/build/install 
+#RUN cmake --install .
 
 FROM plotlablib_requirements_base AS plotlablib_builder
 
 WORKDIR /tmp/${PROJECT}/${PROJECT}
-RUN rm -rf build && \
-    bash build.sh
+RUN bash build.sh
 
 
 #FROM alpine:3.14 AS plotlablib_package
