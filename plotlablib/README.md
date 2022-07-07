@@ -43,15 +43,3 @@ A library for the interaction with plotlabserver.
 - Other commands for windows are: hide, show, hideAxis, showAxis, hideGrid, showGrid, setX/Y/ZLabel, setName, setTitle
 - Manipulate the viewport of the figure: setViewPortOffsets
 
-## License
-The source code and the accompanying material is licensed under the terms of the [EPL v2](LICENSE).
-
-## Dependencies
-Plotlablib [depends](dependencies.md) on external software packages.
-
-## Contributing
-Please see the [contribution guidelines](CONTRIBUTING.md) if you want to contribute.
-
-## Contributors
-- Daniel Heß
-- Thomas Lobig
