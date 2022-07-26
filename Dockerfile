@@ -17,32 +17,39 @@ RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive xargs apt-get install --no-install-recommends -y < ${REQUIREMENTS_FILE} && \
     rm -rf /var/lib/apt/lists/*
 
-COPY . /tmp/${PROJECT}
+COPY ${PROJECT} /tmp/${PROJECT}/${PROJECT}
 
-COPY --from=libzmq /tmp/libzmq /tmp/libzmq
-RUN mkdir -p /tmp/${PROJECT}/${PROJECT}/external/libzmq
-WORKDIR /tmp/${PROJECT}/${PROJECT}/external/libzmq
-RUN ln -s ../../../../libzmq libzmq
+FROM plotlablib_requirements_base AS plotlablib_external_library_requirements_base
 
-COPY --from=cppzmq /tmp/cppzmq /tmp/cppzmq
-RUN mkdir -p /tmp/${PROJECT}/${PROJECT}/external/cppzmq
-WORKDIR /tmp/${PROJECT}/${PROJECT}/external/cppzmq
-RUN ln -s ../../../../cppzmq cppzmq
+ARG EXTERNAL_LIBRARY_DIRECTORY=/tmp/${PROJECT}/${PROJECT}/external
+ARG INSTALL_PREFIX=/tmp/${PROJECT}/${PROJECT}/build/install
+RUN mkdir -p "${INSTALL_PREFIX}"
 
-WORKDIR /tmp/libzmq/build
-RUN cmake --install . --prefix /tmp/${PROJECT}/${PROJECT}/build/install 
-#RUN cmake --install .
+ARG LIB=libzmq
+COPY --from=libzmq /tmp/${LIB} /tmp/${LIB}
+WORKDIR /tmp/${LIB}/build
+RUN cmake --install . --prefix ${INSTALL_PREFIX}
 
-WORKDIR /tmp/cppzmq/build
-RUN cmake --install . --prefix /tmp/${PROJECT}/${PROJECT}/build/install 
-#RUN cmake --install .
-
-FROM plotlablib_requirements_base AS plotlablib_builder
-
-WORKDIR /tmp/${PROJECT}/${PROJECT}
-RUN bash build.sh
+ARG LIB=cppzmq
+COPY --from=cppzmq /tmp/${LIB} /tmp/${LIB}
+WORKDIR /tmp/${LIB}/build
+RUN cmake --install . --prefix ${INSTALL_PREFIX}
 
 
+FROM plotlablib_external_library_requirements_base AS plotlablib_builder
+
+ARG PROJECT
+
+WORKDIR /tmp/${PROJECT}/${PROJECT}/build
+RUN cmake .. \
+             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+             -DCMAKE_BUILD_TYPE=Release \
+             -DCMAKE_INSTALL_PREFIX="install" && \ 
+    cmake --build . -v --config Release --target install -- -j $(nproc)
+
+RUN cmake .. && cpack -G DEB && find . -type f -name "*.deb" | xargs mv -t . || true
+
+RUN mv CMakeCache.txt CMakeCache.txt.build
 #FROM alpine:3.14 AS plotlablib_package
 
 #COPY --from=plotlablib_builder /tmp/${PROJECT} /tmp/${PROJECT}

@@ -13,8 +13,9 @@
 #********************************************************************************
 cmake_minimum_required(VERSION 3.13)
 
-project(plotlablib 
-        VERSION 0.0.1
+project(
+    plotlablib 
+    VERSION 0.0.1
 )
 
 add_library(${PROJECT_NAME} INTERFACE)
@@ -26,8 +27,10 @@ set(PACKAGE_MAINTAINER "DLR TS-KOS-SAI")
 set(PACKAGE_MAINTAINER_EMAIL "ts-kos-sai@dlr.de")
 
 include(GNUInstallDirs)
-list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/external/libzmq/libzmq/build/install")
-list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/external/cppzmq/cppzmq/build/install")
+
+#list(APPEND CMAKE_PREFIX_PATH "$ENV{CMAKE_PREFIX_PATH}")
+#list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/external/libzmq/libzmq/build/install")
+#list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/external/cppzmq/cppzmq/build/install")
 message("CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
 
 find_package(ZeroMQ CONFIG REQUIRED)
