@@ -50,6 +50,7 @@ RUN cmake .. \
 RUN cmake .. && cpack -G DEB && find . -type f -name "*.deb" | xargs mv -t . || true
 
 RUN mv CMakeCache.txt CMakeCache.txt.build
-#FROM alpine:3.14 AS plotlablib_package
 
-#COPY --from=plotlablib_builder /tmp/${PROJECT} /tmp/${PROJECT}
+FROM alpine:3.14 AS plotlablib_package
+
+COPY --from=plotlablib_builder /tmp/${PROJECT} /tmp/${PROJECT}
