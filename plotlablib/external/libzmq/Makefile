@@ -41,17 +41,12 @@ all: build_libzmq
 build:
 	rm -rf ${PROJECT}/build
 	docker build --network="host" --tag $(shell echo ${TAG} | tr A-Z a-z) --build-arg PROJECT=${PROJECT} .
-	mkdir -p "${ROOT_DIR}/tmp/${PROJECT}/build"
-	docker cp $$(docker create --rm $(shell echo ${TAG} | tr A-Z a-z)):/tmp/${PROJECT}/build tmp/${PROJECT}/build
-	cp -r "${ROOT_DIR}/tmp/${PROJECT}/build/build" "${ROOT_DIR}/${PROJECT}"
-	rm -rf ${ROOT_DIR}/tmp
+	docker cp $$(docker create --rm $(shell echo ${TAG} | tr A-Z a-z)):/tmp/${PROJECT}/build ${PROJECT}/build
 
 .PHONY: clean
-clean: set_libsodium_env clean_project set_libsodium_env clean_project
-
-.PHONY: clean_project
-clean_project:
+clean: 
 	rm -rf "${ROOT_DIR}/*/build"
-	rm -rf "${ROOT_DIR}/tmp"
-	docker rm $$(docker ps -a -q --filter "ancestor=${TAG}") 2> /dev/null || true
-	docker rmi $$(docker images -q ${TAG}) 2> /dev/null || true
+	docker rm $$(docker ps -a -q --filter "ancestor=${LIBZMQ_TAG}") 2> /dev/null || true
+	docker rmi $$(docker images -q ${LIBZMQ_TAG}) 2> /dev/null || true
+	docker rm $$(docker ps -a -q --filter "ancestor=${LIBSODIUM_TAG}") 2> /dev/null || true
+	docker rmi $$(docker images -q ${LIBSODIUM_TAG}) 2> /dev/null || true
