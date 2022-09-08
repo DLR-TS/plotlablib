@@ -3,7 +3,7 @@ SHELL:=/bin/bash
 .DEFAULT_GOAL := all
 
 
-ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+ROOT_DIR:=$(shell dirname "$(realpath $(firstword $(MAKEFILE_LIST)))")
 MAKEFLAGS += --no-print-directory
 
 .EXPORT_ALL_VARIABLES:
@@ -38,10 +38,10 @@ set_libsodium_env:
 all: build_libzmq
 
 .PHONY: build
-build:
+build: clean
 	rm -rf ${PROJECT}/build
 	docker build --network="host" --tag $(shell echo ${TAG} | tr A-Z a-z) --build-arg PROJECT=${PROJECT} .
-	docker cp $$(docker create --rm $(shell echo ${TAG} | tr A-Z a-z)):/tmp/${PROJECT}/build ${PROJECT}/build
+	docker cp $$(docker create --rm $(shell echo ${TAG} | tr A-Z a-z)):/tmp/${PROJECT}/build "${PROJECT}/build"
 
 .PHONY: clean
 clean: 

@@ -3,7 +3,7 @@ SHELL:=/bin/bash
 .DEFAULT_GOAL := all
 
 
-ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+ROOT_DIR:=$(shell dirname "$(realpath $(firstword $(MAKEFILE_LIST)))")
 MAKEFLAGS += --no-print-directory
 
 .EXPORT_ALL_VARIABLES:
@@ -19,7 +19,7 @@ build_cppzmq:
 	cd cppzmq && make
 
 .PHONY: all 
-all: build_libzmq build_cppzmq 
+all: clean build_libzmq build_cppzmq 
 
 .PHONY: clean
 clean:

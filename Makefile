@@ -31,13 +31,13 @@ all: build_external build
 build: all
 
 .PHONY: build
-build: set_env
+build: set_env clean
 	rm -rf ${ROOT_DIR}/${PROJECT}/build
 	docker build --network host \
                  --tag $(shell echo ${TAG} | tr A-Z a-z) \
                  --build-arg PROJECT=${PROJECT} .
 	mkdir -p "${ROOT_DIR}/tmp/${PROJECT}"
-	docker cp $$(docker create --rm $(shell echo ${TAG} | tr A-Z a-z)):/tmp/${PROJECT}/${PROJECT}/build ${ROOT_DIR}/${PROJECT}
+	docker cp $$(docker create --rm $(shell echo ${TAG} | tr A-Z a-z)):/tmp/${PROJECT}/${PROJECT}/build "${ROOT_DIR}/${PROJECT}"
 
 .PHONY: clean 
 clean: set_env
