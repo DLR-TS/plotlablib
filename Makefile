@@ -3,7 +3,7 @@ SHELL:=/bin/bash
 
 .DEFAULT_GOAL := all
 
-ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+ROOT_DIR:=$(shell dirname "$(realpath $(firstword $(MAKEFILE_LIST)))")
 
 MAKEFLAGS += --no-print-directory
 
