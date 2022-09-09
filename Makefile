@@ -32,17 +32,16 @@ build: all
 
 .PHONY: build
 build: set_env clean
-	rm -rf ${ROOT_DIR}/${PROJECT}/build
+	rm -rf "${ROOT_DIR}/${PROJECT}/build"
+	make build_external
 	docker build --network host \
                  --tag $(shell echo ${TAG} | tr A-Z a-z) \
                  --build-arg PROJECT=${PROJECT} .
-	mkdir -p "${ROOT_DIR}/tmp/${PROJECT}"
 	docker cp $$(docker create --rm $(shell echo ${TAG} | tr A-Z a-z)):/tmp/${PROJECT}/${PROJECT}/build "${ROOT_DIR}/${PROJECT}"
 
 .PHONY: clean 
-clean: set_env
+clean: set_env clean_external
 	rm -rf "${ROOT_DIR}/${PROJECT}/build"
-	rm -rf "${ROOT_DIR}/tmp"
 	docker rm $$(docker ps -a -q --filter "ancestor=${TAG}") 2> /dev/null || true
 	docker rmi $$(docker images -q ${PROJECT}) 2> /dev/null || true
 

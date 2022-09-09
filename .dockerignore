@@ -1,5 +1,7 @@
 **.git
 plotlablib/external/libzmq/libzmq/build
+plotlablib/external/libzmq/libsodium/build
+plotlablib/external/cppzmq/build
 **/external
 **/build
 **.log

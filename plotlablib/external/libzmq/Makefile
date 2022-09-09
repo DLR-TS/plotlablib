@@ -39,13 +39,14 @@ all: build_libzmq
 
 .PHONY: build
 build: clean
-	rm -rf ${PROJECT}/build
+	rm -rf "${PROJECT}/build"
 	docker build --network="host" --tag $(shell echo ${TAG} | tr A-Z a-z) --build-arg PROJECT=${PROJECT} .
 	docker cp $$(docker create --rm $(shell echo ${TAG} | tr A-Z a-z)):/tmp/${PROJECT}/build "${PROJECT}/build"
 
 .PHONY: clean
 clean: 
-	rm -rf "${ROOT_DIR}/*/build"
+	rm -rf "${ROOT_DIR}/libzmq/build"
+	rm -rf "${ROOT_DIR}/libsodium/build"
 	docker rm $$(docker ps -a -q --filter "ancestor=${LIBZMQ_TAG}") 2> /dev/null || true
 	docker rmi $$(docker images -q ${LIBZMQ_TAG}) 2> /dev/null || true
 	docker rm $$(docker ps -a -q --filter "ancestor=${LIBSODIUM_TAG}") 2> /dev/null || true
