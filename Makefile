@@ -16,7 +16,6 @@ MAKEFLAGS += --no-print-directory
 DOCKER_BUILDKIT?=1
 DOCKER_CONFIG?=
 
-
 .PHONY: set_env 
 set_env: 
 	$(eval PROJECT := ${PLOTLABLIB_PROJECT}) 
