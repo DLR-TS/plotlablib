@@ -10,3 +10,6 @@
 [submodule "external/cppzmq/cppzmq"]
 	path = plotlablib/external/cppzmq/cppzmq
 	url = https://github.com/zeromq/cppzmq.git
+[submodule "make_gadgets"]
+	path = make_gadgets
+	url = git@github.com:DLR-TS/make_gadgets.git

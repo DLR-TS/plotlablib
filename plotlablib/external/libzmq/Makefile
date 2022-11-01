@@ -47,7 +47,7 @@ build: clean
 clean: 
 	rm -rf "${ROOT_DIR}/libzmq/build"
 	rm -rf "${ROOT_DIR}/libsodium/build"
-	docker rm $$(docker ps -a -q --filter "ancestor=${LIBZMQ_TAG}") 2> /dev/null || true
-	docker rmi $$(docker images -q ${LIBZMQ_TAG}) 2> /dev/null || true
-	docker rm $$(docker ps -a -q --filter "ancestor=${LIBSODIUM_TAG}") 2> /dev/null || true
-	docker rmi $$(docker images -q ${LIBSODIUM_TAG}) 2> /dev/null || true
+	docker rm $$(docker ps -a -q --filter "ancestor=${LIBZMQ_TAG}") --force 2> /dev/null || true
+	docker rmi $$(docker images -q ${LIBZMQ_TAG}) --force 2> /dev/null || true
+	docker rm $$(docker ps -a -q --filter "ancestor=${LIBSODIUM_TAG}") --force 2> /dev/null || true
+	docker rmi $$(docker images -q ${LIBSODIUM_TAG}) --force 2> /dev/null || true
