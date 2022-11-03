@@ -8,9 +8,13 @@ MAKEFLAGS += --no-print-directory
 #plotlablib_MAKEFILE_PATH:= $(shell dirname "$(abspath "$(lastword $(MAKEFILE_LIST))")")
 plotlablib_project:=plotlablib
 PLOTLABLIB_PROJECT:=${plotlablib_project}
-plotlablib_MAKEFILE_PATH:=$(shell realpath "$(lastword $(MAKEFILE_LIST))" | sed "s|/${plotlablib_project}.mk||g")
-plotlablib_tag:=$(shell cd "${plotlablib_MAKEFILE_PATH}/make_gadgets" && make get_sanitized_branch_name REPO_DIRECTORY=${plotlablib_MAKEFILE_PATH})
+
+plotlablib_MAKEFILE_PATH:=$(shell realpath "$(shell dirname "$(lastword $(MAKEFILE_LIST))")")
+make_gadgets_PATH:=${adore_if_v2x_MAKEFILE_PATH}/adore_if_ros_msg/make_gadgets
+
+plotlablib_tag:=$(shell cd ${make_gadgets_PATH} && make get_sanitized_branch_name REPO_DIRECTORY=${adore_if_v2x_MAKEFILE_PATH})
 PLOTLABLIB_TAG:=${plotlablib_tag}
+
 plotlablib_image:=${plotlablib_project}:${plotlablib_tag}
 PLOTLABLIB_IMAGE:=${plotlablib_image}
 
