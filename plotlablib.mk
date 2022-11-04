@@ -5,14 +5,14 @@
 MAKEFLAGS += --no-print-directory
 
 .EXPORT_ALL_VARIABLES:
-#plotlablib_MAKEFILE_PATH:= $(shell dirname "$(abspath "$(lastword $(MAKEFILE_LIST))")")
 plotlablib_project:=plotlablib
 PLOTLABLIB_PROJECT:=${plotlablib_project}
 
 plotlablib_MAKEFILE_PATH:=$(shell realpath "$(shell dirname "$(lastword $(MAKEFILE_LIST))")")
-make_gadgets_PATH:=${adore_if_v2x_MAKEFILE_PATH}/adore_if_ros_msg/make_gadgets
+make_gadgets_PATH:=${plotlablib_MAKEFILE_PATH}/make_gadgets
+REPO_DIRECTORY:=${plotlablib_MAKEFILE_PATH}
 
-plotlablib_tag:=$(shell cd ${make_gadgets_PATH} && make get_sanitized_branch_name REPO_DIRECTORY=${adore_if_v2x_MAKEFILE_PATH})
+plotlablib_tag:=$(shell cd ${make_gadgets_PATH} && make get_sanitized_branch_name REPO_DIRECTORY=${REPO_DIRECTORY})
 PLOTLABLIB_TAG:=${plotlablib_tag}
 
 plotlablib_image:=${plotlablib_project}:${plotlablib_tag}

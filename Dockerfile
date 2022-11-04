@@ -41,15 +41,23 @@ FROM plotlablib_external_library_requirements_base AS plotlablib_builder
 ARG PROJECT
 
 WORKDIR /tmp/${PROJECT}/${PROJECT}/build
+#RUN cmake .. \
+#             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+#             -DCMAKE_BUILD_TYPE=Release \
+#             -DCMAKE_INSTALL_PREFIX="install" && \ 
+#    cmake --build . -v --config Release --target install -- -j $(nproc)
+
+#RUN cmake .. && cpack -G DEB && find . -type f -name "*.deb" | xargs mv -t . || true
+
+#RUN mv CMakeCache.txt CMakeCache.txt.build
+
 RUN cmake .. \
              -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
              -DCMAKE_BUILD_TYPE=Release \
-             -DCMAKE_INSTALL_PREFIX="install" && \ 
-    cmake --build . -v --config Release --target install -- -j $(nproc)
-
-RUN cmake .. && cpack -G DEB && find . -type f -name "*.deb" | xargs mv -t . || true
-
-RUN mv CMakeCache.txt CMakeCache.txt.build
+             -DCMAKE_PREFIX_PATH="install" && \
+    cmake --build . --config Release --target install -- -j $(nproc) && \
+    cpack -G DEB && find . -type f -name "*.deb" | xargs mv -t . && \
+    mv CMakeCache.txt CMakeCache.txt.build
 
 FROM alpine:3.14 AS plotlablib_package
 

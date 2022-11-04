@@ -28,10 +28,21 @@ set(PACKAGE_MAINTAINER_EMAIL "ts-kos-sai@dlr.de")
 
 include(GNUInstallDirs)
 
+list(APPEND CMAKE_PREFIX_PATH "$ENV{CMAKE_PREFIX_PATH}")
+
 #list(APPEND CMAKE_PREFIX_PATH "$ENV{CMAKE_PREFIX_PATH}")
 #list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/external/libzmq/libzmq/build/install")
 #list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/external/cppzmq/cppzmq/build/install")
 message("CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
+
+
+set(libzmq_CMAKE_INSTALL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/build/install")
+list(APPEND CMAKE_PREFIX_PATH "${libzmq_CMAKE_INSTALL_PATH}")
+
+set(cppzmq_CMAKE_INSTALL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/build/install")
+list(APPEND CMAKE_PREFIX_PATH "${cppzmq_CMAKE_INSTALL_PATH}")
+
+
 
 find_package(ZeroMQ CONFIG REQUIRED)
 find_package(cppzmq CONFIG REQUIRED)
@@ -68,37 +79,4 @@ target_compile_options(${PROJECT_NAME} INTERFACE "-Wall")
 
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 
-install(TARGETS ${PROJECT_NAME}
-        EXPORT ${PROJECT_NAME}_Targets
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-
-
-include(CMakePackageConfigHelpers)
-
-configure_package_config_file(
-  "${PROJECT_SOURCE_DIR}/cmake/LibraryConfig.cmake.in"
-  "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-  INSTALL_DESTINATION
-  ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake)
-
-install(EXPORT ${PROJECT_NAME}_Targets
-        COMPONENT ${PROJECT_NAME}
-        FILE ${PROJECT_NAME}Targets.cmake
-        NAMESPACE ${PROJECT_NAME}::
-        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake
-)
-
-install(FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-              # "${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
-        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake
-        COMPONENT ${PROJECT_NAME}
-)
-
-#install(DIRECTORY ${PROJECT_SOURCE_DIR}/include DESTINATION .)
-
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/include DESTINATION .)
-
-#install(DIRECTORY ${PROJECT_SOURCE_DIR}/build/include DESTINATION .)
-
+include(PackagingInstallTargets)
