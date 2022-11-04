@@ -14,8 +14,8 @@
 cmake_minimum_required(VERSION 3.13)
 
 project(
-    plotlablib 
-    VERSION 0.0.1
+  plotlablib 
+  VERSION 0.0.1
 )
 
 add_library(${PROJECT_NAME} INTERFACE)
@@ -42,14 +42,11 @@ list(APPEND CMAKE_PREFIX_PATH "${libzmq_CMAKE_INSTALL_PATH}")
 set(cppzmq_CMAKE_INSTALL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/build/install")
 list(APPEND CMAKE_PREFIX_PATH "${cppzmq_CMAKE_INSTALL_PATH}")
 
-
-
 find_package(ZeroMQ CONFIG REQUIRED)
 find_package(cppzmq CONFIG REQUIRED)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(Packing)
-
 
 set_directory_properties(PROPERTIES EXCLUDE_FROM_ALL YES)
 
@@ -58,15 +55,13 @@ set_directory_properties(PROPERTIES EXCLUDE_FROM_ALL YES)
 
 get_directory_property(PLOTLABLIB_PARENT_DIR PARENT_DIRECTORY)
 
-message(STATUS " plotlab: building plotlab lib...")
-
-
 #set(zmqlib_include  ${CMAKE_CURRENT_SOURCE_DIR}/external/cppzmq/
 #  ${CMAKE_CURRENT_SOURCE_DIR}/external/libzmq/build/bin/usr/local/include
 #)
 
-target_include_directories(
-  ${PROJECT_NAME}
+set(PROJECT_INCLUDE_PATH "${PROJECT_SOURCE_DIR}/include")
+
+target_include_directories(${PROJECT_NAME}
   INTERFACE 
     $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>

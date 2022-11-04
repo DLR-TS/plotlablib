@@ -35,10 +35,10 @@ COPY --from=cppzmq /tmp/${LIB} /tmp/${LIB}
 WORKDIR /tmp/${LIB}/build
 RUN cmake --install . --prefix ${INSTALL_PREFIX}
 
-
 FROM plotlablib_external_library_requirements_base AS plotlablib_builder
 
 ARG PROJECT
+ARG INSTALL_PREFIX=/tmp/${PROJECT}/${PROJECT}/build/install
 
 WORKDIR /tmp/${PROJECT}/${PROJECT}/build
 #RUN cmake .. \
@@ -55,10 +55,11 @@ RUN cmake .. \
              -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
              -DCMAKE_BUILD_TYPE=Release \
              -DCMAKE_PREFIX_PATH="install" && \
-    cmake --build . --config Release --target install -- -j $(nproc) && \
+    cmake --build . -v --config Release --target install -- -j $(nproc) && \
+    cmake --install . --prefix ${INSTALL_PREFIX} --config Release && \
     cpack -G DEB && find . -type f -name "*.deb" | xargs mv -t . && \
     mv CMakeCache.txt CMakeCache.txt.build
 
-FROM alpine:3.14 AS plotlablib_package
+#FROM alpine:3.14 AS plotlablib_package
 
-COPY --from=plotlablib_builder /tmp/${PROJECT} /tmp/${PROJECT}
+#COPY --from=plotlablib_builder /tmp/${PROJECT} /tmp/${PROJECT}
