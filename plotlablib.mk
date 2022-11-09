@@ -18,6 +18,13 @@ PLOTLABLIB_TAG:=${plotlablib_tag}
 plotlablib_image:=${plotlablib_project}:${plotlablib_tag}
 PLOTLABLIB_IMAGE:=${plotlablib_image}
 
+plotlablib_CMAKE_BUILD_PATH="${plotlablib_project}/build"
+PLOTLABLIB_CMAKE_BUILD_PATH=${plotlablib_CMAKE_BULID_PATH}!
+
+plotlablib_CMAKE_INSTALL_PATH="${plotlablib_CMAKE_BUILD_PATH}/install"
+PLOTLABLIB_CMAKE_INSTALL_PATH=${plotlablib_CMAKE_INSTALL_PATH}
+
+
 .PHONY: build_plotlablib 
 build_plotlablib: ## Build plotlablib
 	cd "${plotlablib_MAKEFILE_PATH}" && make
