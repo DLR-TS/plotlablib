@@ -25,16 +25,15 @@ set(PACKAGE_VENDOR "DLR TS-KOS-SAI")
 set(PACKAGE_DESCRIPTION "plotlab")
 set(PACKAGE_MAINTAINER "DLR TS-KOS-SAI")
 set(PACKAGE_MAINTAINER_EMAIL "ts-kos-sai@dlr.de")
-
 include(GNUInstallDirs)
 
 list(APPEND CMAKE_PREFIX_PATH "$ENV{CMAKE_PREFIX_PATH}")
-
 #list(APPEND CMAKE_PREFIX_PATH "$ENV{CMAKE_PREFIX_PATH}")
 #list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/external/libzmq/libzmq/build/install")
 #list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/external/cppzmq/cppzmq/build/install")
 message("CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
 
+set(PROJECT_INCLUDE_PATH "${PROJECT_SOURCE_DIR}/include")
 
 set(libzmq_CMAKE_INSTALL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/build/install")
 list(APPEND CMAKE_PREFIX_PATH "${libzmq_CMAKE_INSTALL_PATH}")
@@ -59,7 +58,6 @@ get_directory_property(PLOTLABLIB_PARENT_DIR PARENT_DIRECTORY)
 #  ${CMAKE_CURRENT_SOURCE_DIR}/external/libzmq/build/bin/usr/local/include
 #)
 
-set(PROJECT_INCLUDE_PATH "${PROJECT_SOURCE_DIR}/include")
 
 target_include_directories(${PROJECT_NAME}
   INTERFACE 
