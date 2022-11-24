@@ -6,3 +6,4 @@ plotlablib/external/cppzmq/build
 **/build
 **.log
 **.dockerignore
+**make_gadgets
