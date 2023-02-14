@@ -23,7 +23,7 @@ EXTERNALS_DOCKER_ARCHIVE="/var/tmp/plotlablib_externals.tar"
 
 .PHONY: save_docker_images
 save_docker_images:
-	docker save -o "${EXTERNALS_DOCKER_ARCHIVE}" ${CPPZMQ_TAG} ${LIBZMQ_TAG}
+	docker save -o "${EXTERNALS_DOCKER_ARCHIVE}" ${CPPZMQ_TAG} ${LIBZMQ_TAG} 2> /dev/null || true
 
 .PHONY: load_docker_images
 load_docker_images:

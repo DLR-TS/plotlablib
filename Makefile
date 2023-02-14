@@ -16,13 +16,23 @@ MAKEFLAGS += --no-print-directory
 DOCKER_BUILDKIT?=1
 DOCKER_CONFIG?=
 
+DOCKER_ARCHIVE="/var/tmp/plotlablib.tar"
+
+.PHONY: save_docker_image
+save_docker_image:
+	docker save -o "${DOCKER_ARCHIVE}" ${PLOTLABLIB_PROJECT}:${PLOTLABLIB_TAG} 2>/dev/null || true
+
+.PHONY: load_docker_image
+load_docker_image:
+	@docker load --input "${DOCKER_ARCHIVE}" 2>/dev/null || true
+
 .PHONY: set_env 
 set_env: 
 	$(eval PROJECT := ${PLOTLABLIB_PROJECT}) 
 	$(eval TAG := ${PLOTLABLIB_TAG})
 
 .PHONY: all 
-all: build_external build
+all: load_docker_image build_external build save_docker_image
 
 .PHONY: build 
 build: all
