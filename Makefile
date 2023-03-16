@@ -6,8 +6,6 @@ MAKEFILE_PATH:=$(shell dirname "$(abspath "$(lastword $(MAKEFILE_LIST)"))")
 
 .DEFAULT_GOAL := all
 
-include make_gadgets/make_gadgets.mk
-include make_gadgets/docker/docker-tools.mk
 include plotlablib.mk
 
 MAKEFLAGS += --no-print-directory
