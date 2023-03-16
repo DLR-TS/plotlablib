@@ -6,6 +6,8 @@ MAKEFILE_PATH:=$(shell dirname "$(abspath "$(lastword $(MAKEFILE_LIST)"))")
 
 .DEFAULT_GOAL := all
 
+$(shell git submodule update --init --recursive --depth 1 plotlablib/external/*)
+
 include plotlablib.mk
 
 MAKEFLAGS += --no-print-directory
@@ -49,10 +51,6 @@ clean: set_env clean_external ## Clean plotlablib
 	rm -rf "${ROOT_DIR}/${PROJECT}/build"
 	docker rm $$(docker ps -a -q --filter "ancestor=:${PROJECT}:${TAG}") 2> /dev/null || true
 	docker rmi $$(docker images -q ${PROJECT}:${TAG}) --force 2> /dev/null || true
-
-.PHONY: clone_externals
-clone_externals:
-	git submodule update --init --recursive --depth 1 plotlablib/external/*  
 
 .PHONY: build_external
 build_external:
