@@ -22,16 +22,16 @@ ifeq ($(wildcard $(MAKE_GADGETS_PATH)/*),)
     $(error "ERROR: ${MAKE_GADGETS_PATH} does not exist. Did you clone the submodules?")
 endif
 
-
-
 PLOTLABLIB_REPO_DIRECTORY:=${PLOTLABLIB_MAKEFILE_PATH}
 
-PLOTLABLIB_TAG:=$(shell cd ${PLOTLABLIB_MAKE_GADGETS_PATH} && make get_sanitized_branch_name REPO_DIRECTORY=${PLOTLABLIB_REPO_DIRECTORY})
+PLOTLABLIB_TAG:=$(shell cd ${MAKE_GADGETS_PATH} && make get_sanitized_branch_name REPO_DIRECTORY=${PLOTLABLIB_REPO_DIRECTORY})
 PLOTLABLIB_IMAGE:=${PLOTLABLIB_PROJECT}:${PLOTLABLIB_TAG}
 
 PLOTLABLIB_CMAKE_BUILD_PATH="${PLOTLABLIB_PROJECT}/build"
 PLOTLABLIB_CMAKE_INSTALL_PATH="${PLOTLABLIB_CMAKE_BUILD_PATH}/install"
 
+include ${MAKE_GADGETS_PATH}/make_gadgets.mk
+include ${MAKE_GADGETS_PATH}/docker/docker-tools.mk
 
 .PHONY: build_plotlablib 
 build_plotlablib: ## Build plotlablib
