@@ -51,8 +51,8 @@ clean: set_env clean_external ## Clean plotlablib
 	docker rm $$(docker ps -a -q --filter "ancestor=:${PROJECT}:${TAG}") 2> /dev/null || true
 	docker rmi $$(docker images -q ${PROJECT}:${TAG}) --force 2> /dev/null || true
 
-.PHONY: build_externals
-build_externals:
+.PHONY: build_external
+build_external:
 	cd plotlablib/external && \
     make build_fast
 
