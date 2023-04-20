@@ -21,6 +21,12 @@ LIBZMQ_TAG="${LIBZMQ_PROJECT}:${LIBZMQ_VERSION}"
 DOCKER_REPOSITORY="andrewkoerner/adore"
 EXTERNALS_DOCKER_ARCHIVE="/var/tmp/plotlablib_externals.tar"
 
+
+.PHONY: update_submodules
+update_submodules:
+	git submodule update --init --recursive --depth 1 ${ROOT_DIR}/*
+
+
 .PHONY: save_docker_images
 save_docker_images:
 	docker save -o "${EXTERNALS_DOCKER_ARCHIVE}" ${CPPZMQ_TAG} ${LIBZMQ_TAG} 2> /dev/null || true
@@ -54,8 +60,9 @@ docker_publish:
 
 
 .PHONY: build_libzmq 
-build_libzmq:
+build_libzmq: update_submodules
 	cd libzmq && make
+
 .PHONY: build_fast_libzmq
 build_fast_libzmq:
 	@if [ -n "$$(docker images -q ${LIBZMQ_TAG})" ]; then \
@@ -65,8 +72,9 @@ build_fast_libzmq:
     fi
 
 .PHONY: build_cppzmq
-build_cppzmq: 
+build_cppzmq: update_submodules 
 	cd cppzmq && make
+
 .PHONY: build_fast_cppzmq
 build_fast_cppzmq:
 	@if [ -n "$$(docker images -q ${CPPZMQ_TAG})" ]; then \
@@ -76,8 +84,8 @@ build_fast_cppzmq:
     fi
 
 
-.PHONY: all
-all:
+.PHONY: build_fast
+build_fast:
 	make clean
 	make load_docker_images
 	make docker_pull_fast
