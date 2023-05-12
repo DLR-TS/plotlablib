@@ -1,8 +1,6 @@
-
 SHELL:=/bin/bash
 
 ROOT_DIR:=$(shell dirname "$(realpath $(firstword $(MAKEFILE_LIST)))")
-MAKEFILE_PATH:=$(shell dirname "$(abspath "$(lastword $(MAKEFILE_LIST)"))")
 
 .DEFAULT_GOAL := all
 
@@ -14,6 +12,8 @@ MAKEFLAGS += --no-print-directory
 .EXPORT_ALL_VARIABLES:
 DOCKER_BUILDKIT?=1
 DOCKER_CONFIG?=
+
+SUBMODULES_PATH?=${ROOT_DIR}
 
 DOCKER_ARCHIVE="/var/tmp/plotlablib.tar"
 
@@ -60,3 +60,11 @@ build_external:
 clean_external:
 	cd plotlablib/external && \
     make clean
+
+.PHONY: test
+test:
+	bash .ci_pipeline test
+
+.PHONY: ci_pipeline 
+ci_pipeline:
+	bash .ci_pipeline
