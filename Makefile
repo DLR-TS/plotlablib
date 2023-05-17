@@ -6,7 +6,7 @@ ROOT_DIR:=$(shell dirname "$(realpath $(firstword $(MAKEFILE_LIST)))")
 
 
 include plotlablib.mk
-include ci_teststand/ci_teststand.mk
+include ${PLOTLABLIB_SUBMODULES_PATH}/ci_teststand.mk
 
 MAKEFLAGS += --no-print-directory
 

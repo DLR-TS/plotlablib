@@ -47,4 +47,4 @@ jobs:
         with:
           name: workspace
       - name: Test
-        run: make load_docker_images && make test
+        run: make load_docker_images && make ci_test
