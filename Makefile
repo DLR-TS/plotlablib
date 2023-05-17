@@ -6,7 +6,6 @@ ROOT_DIR:=$(shell dirname "$(realpath $(firstword $(MAKEFILE_LIST)))")
 
 
 include plotlablib.mk
-include ${PLOTLABLIB_SUBMODULES_PATH}/ci_teststand.mk
 
 MAKEFLAGS += --no-print-directory
 
@@ -15,6 +14,8 @@ DOCKER_BUILDKIT?=1
 DOCKER_CONFIG?=
 
 SUBMODULES_PATH?=${ROOT_DIR}
+
+include ${SUBMODULES_PATH}/ci_teststand/ci_teststand.mk
 
 DOCKER_ARCHIVE="/var/tmp/plotlablib.tar"
 
@@ -61,4 +62,7 @@ build_external:
 clean_external:
 	cd plotlablib/external && \
     make clean
+
+.PHONY: test
+test: ci_test
 
