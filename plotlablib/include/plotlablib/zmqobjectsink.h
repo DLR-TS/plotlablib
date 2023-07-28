@@ -60,6 +60,7 @@ void* pthread_ZMQObjectSink_worker(void* that)
 		{
 			usleep(1);
 		}
+		msg.rebuild();
 		if(s->terminate)
 		{
 			break;
