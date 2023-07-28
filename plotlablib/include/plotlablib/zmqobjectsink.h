@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (C) 2017-2020 German Aerospace Center (DLR). 
+ * Copyright (C) 2017-2023 German Aerospace Center (DLR). 
  * Eclipse ADORe, Automated Driving Open Research https://eclipse.org/adore
  *
  * This program and the accompanying materials are made available under the 
@@ -10,6 +10,7 @@
  *
  * Contributors: 
  *   Daniel Heß - initial API and implementation
+ *   Matthias Nichting - fix of memory leak
  ********************************************************************************/
 
 #pragma once
@@ -60,6 +61,7 @@ void* pthread_ZMQObjectSink_worker(void* that)
 		{
 			usleep(1);
 		}
+		msg.rebuild();
 		if(s->terminate)
 		{
 			break;
