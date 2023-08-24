@@ -1,15 +1,19 @@
 [submodule "external/libzmq/cppzmq"]
 	path = plotlablib/external/libzmq/cppzmq
 	url = https://github.com/zeromq/cppzmq.git
+    ignore = dirty
 [submodule "external/libzmq/libzmq"]
 	path = plotlablib/external/libzmq/libzmq
 	url = https://github.com/zeromq/libzmq.git
+    ignore = dirty
 [submodule "external/libzmq/libsodium"]
 	path = plotlablib/external/libzmq/libsodium
 	url = https://github.com/jedisct1/libsodium.git
+    ignore = dirty
 [submodule "external/cppzmq/cppzmq"]
 	path = plotlablib/external/cppzmq/cppzmq
 	url = https://github.com/zeromq/cppzmq.git
+    ignore = dirty
 [submodule "make_gadgets"]
 	path = make_gadgets
 	url = git@github.com:DLR-TS/make_gadgets.git
