@@ -11,14 +11,14 @@ DOCKER_BUILDKIT?=1
 DOCKER_CONFIG?=
 
 
-CPPZMQ_PROJECT="cppzmq"
-CPPZMQ_VERSION="latest"
-CPPZMQ_TAG="${CPPZMQ_PROJECT}:${CPPZMQ_VERSION}"
-LIBZMQ_PROJECT="libzmq"
-LIBZMQ_VERSION="latest"
-LIBZMQ_TAG="${LIBZMQ_PROJECT}:${LIBZMQ_VERSION}"
+CPPZMQ_PROJECT=cppzmq
+CPPZMQ_VERSION=latest
+CPPZMQ_TAG=${CPPZMQ_PROJECT}:${CPPZMQ_VERSION}
+LIBZMQ_PROJECT=libzmq
+LIBZMQ_VERSION=latest
+LIBZMQ_TAG=${LIBZMQ_PROJECT}:${LIBZMQ_VERSION}
 
-DOCKER_REPOSITORY="andrewkoerner/adore"
+DOCKER_REPOSITORY=andrewkoerner/adore
 EXTERNALS_DOCKER_ARCHIVE="/var/tmp/plotlablib_externals.tar"
 
 
@@ -36,27 +36,27 @@ load_docker_images:
 	@docker load --input "${EXTERNALS_DOCKER_ARCHIVE}" 2>/dev/null || true
 
 .PHONY: docker_pull_fast
-docker_pull_fast:
+docker_pull_fast: load_docker_images
 	@[ -n "$$(docker images -q ${CPPZMQ_TAG})" ] || make docker_pull
 	@[ -n "$$(docker images -q ${LIBZMQ_TAG})" ] || make docker_pull
 
 .PHONY: docker_pull
 docker_pull:
-	docker pull "${DOCKER_REPOSITORY}:${CPPZMQ_PROJECT}_${CPPZMQ_VERSION}"
-	docker tag "${DOCKER_REPOSITORY}:${CPPZMQ_PROJECT}_${CPPZMQ_VERSION}" "${CPPZMQ_TAG}"
-	docker rmi "${DOCKER_REPOSITORY}:${CPPZMQ_PROJECT}_${CPPZMQ_VERSION}"
+	docker pull ${DOCKER_REPOSITORY}:${CPPZMQ_PROJECT}_${CPPZMQ_VERSION}
+	docker tag ${DOCKER_REPOSITORY}:${CPPZMQ_PROJECT}_${CPPZMQ_VERSION} ${CPPZMQ_TAG}
+	docker rmi ${DOCKER_REPOSITORY}:${CPPZMQ_PROJECT}_${CPPZMQ_VERSION}
 
-	docker pull "${DOCKER_REPOSITORY}:${LIBZMQ_PROJECT}_${LIBZMQ_VERSION}"
-	docker tag "${DOCKER_REPOSITORY}:${LIBZMQ_PROJECT}_${LIBZMQ_VERSION}" "${LIBZMQ_TAG}"
-	docker rmi "${DOCKER_REPOSITORY}:${LIBZMQ_PROJECT}_${LIBZMQ_VERSION}"
+	docker pull ${DOCKER_REPOSITORY}:${LIBZMQ_PROJECT}_${LIBZMQ_VERSION}
+	docker tag ${DOCKER_REPOSITORY}:${LIBZMQ_PROJECT}_${LIBZMQ_VERSION} ${LIBZMQ_TAG}
+	docker rmi ${DOCKER_REPOSITORY}:${LIBZMQ_PROJECT}_${LIBZMQ_VERSION}
 
 .PHONY: docker_publish
 docker_publish:
-	docker tag "${CPPZMQ_TAG}" "${DOCKER_REPOSITORY}:${CPPZMQ_PROJECT}_${CPPZMQ_VERSION}"
-	docker push "${DOCKER_REPOSITORY}:${CPPZMQ_PROJECT}_${CPPZMQ_VERSION}"
+	docker tag ${CPPZMQ_TAG} ${DOCKER_REPOSITORY}:${CPPZMQ_PROJECT}_${CPPZMQ_VERSION}
+	docker push ${DOCKER_REPOSITORY}:${CPPZMQ_PROJECT}_${CPPZMQ_VERSION}
 
-	docker tag "${LIBZMQ_TAG}" "${DOCKER_REPOSITORY}:${LIBZMQ_PROJECT}_${LIBZMQ_VERSION}"
-	docker push "${DOCKER_REPOSITORY}:${LIBZMQ_PROJECT}_${LIBZMQ_VERSION}"
+	docker tag ${LIBZMQ_TAG} ${DOCKER_REPOSITORY}:${LIBZMQ_PROJECT}_${LIBZMQ_VERSION}
+	docker push ${DOCKER_REPOSITORY}:${LIBZMQ_PROJECT}_${LIBZMQ_VERSION}
 
 
 .PHONY: build_libzmq 
@@ -87,7 +87,6 @@ build_fast_cppzmq:
 .PHONY: build_fast
 build_fast:
 	make clean
-	make load_docker_images
 	make docker_pull_fast
 	make build_fast_libzmq
 	make build_fast_cppzmq
