@@ -19,26 +19,36 @@ LIBZMQ_VERSION=latest
 LIBZMQ_TAG=${LIBZMQ_PROJECT}:${LIBZMQ_VERSION}
 
 DOCKER_REPOSITORY=andrewkoerner/adore
-EXTERNALS_DOCKER_ARCHIVE="/var/tmp/plotlablib_externals.tar"
+EXTERNALS_DOCKER_DIRECTORY=/var/tmp/docker
+EXTERNALS_DOCKER_ARCHIVE=${EXTERNALS_DOCKER_DIRECTORY}/plotlablib_externals.tar
 
+.PHONY: all
+all: build_fast
 
 .PHONY: update_submodules
 update_submodules:
 	git submodule update --init --recursive --depth 1 ${ROOT_DIR}/*
 
+.PHONY: clean_cache
+clean_cache: 
+	rm "${EXTERNALS_DOCKER_ARCHIVE}" 2> /dev/null || true
 
 .PHONY: save_docker_images
 save_docker_images:
-	docker save -o "${EXTERNALS_DOCKER_ARCHIVE}" ${CPPZMQ_TAG} ${LIBZMQ_TAG} 2> /dev/null || true
+	@mkdir -p ${EXTERNALS_DOCKER_DIRECTORY}
+	@docker save -o "${EXTERNALS_DOCKER_ARCHIVE}" ${CPPZMQ_TAG} ${LIBZMQ_TAG} 2> /dev/null
+	@chgrp -R docker ${EXTERNALS_DOCKER_DIRECTORY}
+	@chmod -R 2775 ${EXTERNALS_DOCKER_DIRECTORY} || true
+
 
 .PHONY: load_docker_images
 load_docker_images:
-	@docker load --input "${EXTERNALS_DOCKER_ARCHIVE}" 2>/dev/null || true
+	docker load --input "${EXTERNALS_DOCKER_ARCHIVE}" 2>/dev/null || true
 
 .PHONY: docker_pull_fast
 docker_pull_fast: load_docker_images
-	@[ -n "$$(docker images -q ${CPPZMQ_TAG})" ] || make docker_pull
-	@[ -n "$$(docker images -q ${LIBZMQ_TAG})" ] || make docker_pull
+	[ -n "$$(docker images -q ${CPPZMQ_TAG})" ] || make docker_pull
+	[ -n "$$(docker images -q ${LIBZMQ_TAG})" ] || make docker_pull
 
 .PHONY: docker_pull
 docker_pull:

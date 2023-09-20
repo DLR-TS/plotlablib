@@ -63,6 +63,10 @@ clean_external:
 	cd plotlablib/external && \
     make clean
 
+.PHONY: clean_external_cache 
+clean_external_cache: ## clean all plotlablib external library cache located in /var/tmp. Note: This is never done automatically and must be manually invoked.
+	cd "${ROOT_DIR}/plotlablib/external/" && make clean_cache
+
 .PHONY: test
 test: ci_test
 
