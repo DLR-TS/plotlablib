@@ -32,7 +32,7 @@ make build
 ## External Libraries
 plotlablib depends on several external libraries that do not provide
 distributions.  They are packaged and hosted for adore via docker.io.
-All external libraries are located in `libadore/external`. There is a provided
+All external libraries are located in `plotlablib/external`. There is a provided
 make file to build and publish all external libraries. By default all external
 libraries are disabled in the `.gitmodules` file. They have been previously 
 published to docker.io. In order to build them you must first enable the one 
