@@ -41,6 +41,11 @@ build_plotlablib: ## Build plotlablib
 clean_plotlablib: ## Clean plotlablib build artifacts
 	cd "${PLOTLABLIB_MAKEFILE_PATH}" && make clean
 
+.PHONY: clean_external_library_cache
+clean_external_library_cache: ## Clean/delete plotlab system wide cache in /var/tmp/docker. Note: this is never done automatically and must be manually invoked. 
+	cd "${PLOTLABLIB_MAKEFILE_PATH}" && make clean_external_library_cache
+
+
 .PHONY: branch_plotlablib
 branch_plotlablib: ## Returns the current docker safe/sanitized branch for plotlablib
 	@printf "%s\n" ${PLOTLABLIB_TAG}
